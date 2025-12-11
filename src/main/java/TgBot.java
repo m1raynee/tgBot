@@ -10,13 +10,15 @@ public class TgBot extends TelegramLongPollingBot {
     private String botName = "YM_MediaKeeperBot";
     private String token;
     private RequestResponse request;
+    private DataBase db;
 
-    public TgBot() throws FileNotFoundException {
+    public TgBot(DataBase db) throws FileNotFoundException {
         File file = new File("D:/token.txt");
         Scanner scanner = new Scanner(file);
         this.token = scanner.nextLine();
         scanner.close();
-        this.request = new RequestResponse(new Messages(this));
+        this.db = db;
+        this.request = new RequestResponse(new Messages(this), this.db);
     }
 
     @Override

@@ -60,7 +60,9 @@ public class DataBase {
         if (!list.contains(movie)) {
             list.add(movie);
             saveToFile();
+            System.out.println("+file");
         }
+
     }
 
     // Получить конкретный фильм (ЧАТ ID, Название фильма)

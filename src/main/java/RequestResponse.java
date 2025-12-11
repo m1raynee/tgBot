@@ -1,12 +1,17 @@
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class RequestResponse{
     private Messages messages;
-    public RequestResponse(Messages messages) {
+    private DataBase db;
+    private Map<Long,String> map = new HashMap<>();
+    public RequestResponse(Messages messages, DataBase db) {
         this.messages = messages;
+        this.db = db;
     }
 
     public void getInterapt(Update update) throws TelegramApiException {
@@ -14,6 +19,21 @@ public class RequestResponse{
         String message = update.getMessage().getText();
         Long chatID = update.getMessage().getChatId();
         String userName = update.getMessage().getFrom().getFirstName();
+        if (map.containsKey(chatID)){
+            String stat = map.get(chatID);
+            switch (stat){
+                case "wait_name":
+                    db.add(chatID,message);
+                    map.remove(chatID);
+                    messages.sendMessage(chatID,"Добавлено: "+ message, messages.getNavigationKeyboard());
+                    return;
+                case "wait_delete":
+                    db.remove(chatID,message);
+                    map.remove(chatID);
+                    messages.sendMessage(chatID,"Удалено: "+ message, messages.getNavigationKeyboard());
+                    return;
+            }
+        }
 
         switch (message){
             case "/start":
@@ -54,7 +74,6 @@ public class RequestResponse{
             case "search":
                 messages.sendMessage(chatID, "Введите название", messages.getNavigationKeyboard());
                 break;
-               //показ списков, Ярик!!!
             case "wish":
                 break;
             case "watched":
@@ -64,8 +83,12 @@ public class RequestResponse{
             case "list":
                 break;
             case "new":
+                messages.sendMessage(chatID, "Введите название", messages.getNavigationKeyboard());
+                map.put(chatID,"wait_name");
                 break;
             case "delete":
+                messages.sendMessage(chatID, "Введите название", messages.getNavigationKeyboard());
+                map.put(chatID,"wait_delete");
                 break;
             case "back_to_ForS":
                 filmOrSeries(chatID,messageId);

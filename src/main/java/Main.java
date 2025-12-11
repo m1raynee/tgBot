@@ -8,8 +8,8 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, TelegramApiException, InterruptedException {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-
-        TgBot bot = new TgBot();
+        DataBase db = new DataBase();
+        TgBot bot = new TgBot(db);
         botsApi.registerBot(bot);
         System.out.println("Бот успешно запущен!");
 
