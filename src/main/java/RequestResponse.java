@@ -13,7 +13,6 @@ public class RequestResponse{
 
         String message = update.getMessage().getText();
         Long chatID = update.getMessage().getChatId();
-        Integer messageID = update.getMessage().getMessageId();
         String userName = update.getMessage().getFrom().getFirstName();
 
         switch (message){
@@ -24,10 +23,11 @@ public class RequestResponse{
                 choosingContent(chatID);
                 break;
             case "📝 Внести изменения":
-                //удачиииии
+                coosingEditeMyList(chatID);
                 break;
             case "🗂 Мой список":
                 //делай делай Ярик, я хочу отображение списком с кнопочками
+                seeing(chatID);
                 break;
             case "🦐 Несмешной анекдот":
                 messages.sendMessage(chatID, getRandomJoke(), messages.getNavigationKeyboard());
@@ -54,14 +54,27 @@ public class RequestResponse{
             case "search":
                 messages.sendMessage(chatID, "Введите название", messages.getNavigationKeyboard());
                 break;
-            case "back1":
+               //показ списков, Ярик!!!
+            case "wish":
+                break;
+            case "watched":
+                break;
+            case "already":
+                break;
+            case "list":
+                break;
+            case "new":
+                break;
+            case "delete":
+                break;
+            case "back_to_ForS":
                 filmOrSeries(chatID,messageId);
                 break;
-            case "back2":
+            case "back_to_choose":
                 editechoosingContent(chatID,messageId);
                 break;
-            case "back3":
-
+            case "back_to_all":
+                editeSeeing(chatID,messageId);
                 break;
         }
     }
@@ -72,7 +85,7 @@ public class RequestResponse{
                 {"🎪 Комедия", "comedy", "🎭 Драма", "drama"},
                 {"👻 Ужасы", "horror", "😲 Триллер", "triller"},
                 {"👽 Фантастика", "fiction", "🎲 Любой", "all"},
-                {"👈🏻 Назад", "back1"}
+                {"👈🏻 Назад", "back_to_ForS"}
         }));
     }
 
@@ -80,27 +93,59 @@ public class RequestResponse{
         String text = "Что именно ты ищешь?";
         messages.editMessageKeyboard(chatID, messageId, text, messages.getInlineKeyboard(new String[][]{
                 {"📽 Фильм", "film", "📺 Сериал", "series"},
-                {"👈🏻 Назад", "back2"}
+                {"👈🏻 Назад", "back_to_choose"}
         }));
     }
 
+    //нужна чтоб возвращаться
     private void editechoosingContent(Long chatID, Integer messageID) throws TelegramApiException {
-        //Long chatID = update.getMessage().getChatId();
         String text = "Вы можете выбрать рандомно по жанру или использовать поиск по своему списку";
         messages.editMessageKeyboard(chatID,messageID,text, messages.getInlineKeyboard(new String[][]{
                 {"🎲 Рандомайзер", "random"},
                 {"🔎 Поиск", "search"},
         }));
     }
-
     private void choosingContent(Long chatID) throws TelegramApiException {
-        //Long chatID = update.getMessage().getChatId();
         String text = "Вы можете выбрать рандомно по жанру или использовать поиск по своему списку";
         messages.sendMessage(chatID, text, messages.getInlineKeyboard(new String[][]{
                 {"🎲 Рандомайзер", "random"},
                 {"🔎 Поиск", "search"},
         }));
     }
+
+    private void seeing(Long chatID) throws TelegramApiException {
+        String text = "Вы можете выбрать список к просмотру";
+        messages.sendMessage(chatID,text, messages.getInlineKeyboard(new String[][]{
+                {"🍿 Хочу посмотреть", "wish", "👁 Просмотренное", "watched"},
+                {"📜 Весь список", "list"}
+        }));
+    }
+
+    //нужна чтоб возвращаться
+    private void editeSeeing(Long chatID, Integer messageID) throws TelegramApiException {
+        String text = "Вы можете выбрать список к просмотру";
+        messages.editMessageKeyboard(chatID,messageID,text, messages.getInlineKeyboard(new String[][]{
+                {"🍿 Хочу посмотреть", "wish", "👁 Просмотренное", "watched"},
+                {"📜 Весь список", "list"}
+        }));
+    }
+
+    private void coosingEditeMyList(Long chatID) throws TelegramApiException {
+        String text = "Что вы хотите отредактировать в вашем списке?";
+        messages.sendMessage(chatID, text, messages.getInlineKeyboard(new String[][]{
+                {"➕ Добавить контент", "new", "👁 Отметить просмотренное", "already"},
+                {"🗑 Удалить", "delete"}
+        }));
+    }
+    private void editeMyList(Long chatID, Integer messageID) throws TelegramApiException {
+        String text = "Что вы хотите отредактировать в вашем списке?";
+        messages.editMessageKeyboard(chatID, messageID, text, messages.getInlineKeyboard(new String[][]{
+                {"➕ Добавить контент", "new", "👁 Отметить просмотренное", "already"},
+                {"🗑 Удалить", "delete"}
+        }));
+    }
+
+
 
     //это оч тупо но я хочу доп кнопку сорри надо будет вынести в отдельный класс или придумать что-то норм
     private String[] jokes = {
